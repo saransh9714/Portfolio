@@ -3,8 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Portfolio</title>
+  <title>Saransh Thakran</title>
   <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #222;
+    }
+    body.dark {
+      --bg-color: #121212;
+      --text-color: #f1f1f1;
+    }
     * {
       margin: 0;
       padding: 0;
@@ -13,39 +21,79 @@
     body {
       font-family: Arial, sans-serif;
       line-height: 1.6;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.3s, color 0.3s;
     }
     nav {
       position: fixed;
       top: 0;
       width: 100%;
-      background-color: white;
+      background-color: var(--bg-color);
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       z-index: 1000;
-    }
-    .nav-container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 1rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 1rem 2rem;
     }
-    .nav-brand {
+    .nav-left {
       font-size: 1.5rem;
       font-weight: bold;
     }
-    .nav-buttons button {
-      margin-left: 1rem;
+    .nav-center {
+      display: flex;
+      gap: 1rem;
+    }
+    .nav-center button {
       font-size: 1rem;
       background: none;
       border: none;
       cursor: pointer;
-      color: #333;
+      color: var(--text-color);
       transition: color 0.3s;
     }
-    .nav-buttons button:hover,
-    .nav-buttons .active {
+    .nav-center button:hover,
+    .nav-center .active {
       color: #0070f3;
+    }
+    .toggle-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+    }
+    .toggle-container {
+      position: relative;
+      width: 50px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      background-color: #ccc;
+      border-radius: 34px;
+      height: 100%;
+      width: 100%;
+      transition: 0.4s;
+    }
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+    .dark-mode .toggle-slider {
+      background-color: #666;
+    }
+    .dark-mode .toggle-slider:before {
+      transform: translateX(26px);
     }
     section {
       min-height: 100vh;
@@ -61,19 +109,82 @@
       padding-left: 1.5rem;
     }
     p, li {
-      color: #444;
+      color: var(--text-color);
+    }
+    .skills-container {
+      background: var(--bg-color);
+      padding: 6rem 1.5rem;
+      overflow: hidden;
+      position: relative;
+      text-align: center;
+    }
+    .skills-container h2 {
+      color: var(--text-color);
+      margin-bottom: 0.5rem;
+    }
+    .skills-container p {
+      margin-bottom: 2rem;
+      font-style: italic;
+      color: var(--text-color);
+    }
+    .skills-container::before,
+    .skills-container::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 15%;
+      height: 100%;
+      z-index: 2;
+    }
+    .skills-container::before {
+      left: 0;
+      background: linear-gradient(to right, var(--bg-color) 0%, transparent 100%);
+    }
+    .skills-container::after {
+      right: 0;
+      background: linear-gradient(to left, var(--bg-color) 0%, transparent 100%);
+    }
+    .slider {
+      width: 100%;
+      overflow: hidden;
+    }
+    .slider-track {
+      display: flex;
+      animation: scroll 25s linear infinite;
+    }
+    .slider-track img {
+      height: 60px;
+      width: 60px;
+      margin: 0 2rem;
+      opacity: 0;
+      animation: fadein 2s ease forwards;
+      animation-delay: calc(var(--i) * 0.5s);
+    }
+    @keyframes scroll {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    @keyframes fadein {
+      to {
+        opacity: 1;
+      }
     }
   </style>
 </head>
 <body>
   <nav>
-    <div class="nav-container">
-      <div class="nav-brand">Saransh</div>
-      <div class="nav-buttons">
-        <button onclick="scrollToSection('home')" id="btn-home">Home</button>
-        <button onclick="scrollToSection('about')" id="btn-about">About</button>
-        <button onclick="scrollToSection('projects')" id="btn-projects">Projects</button>
-        <button onclick="scrollToSection('contact')" id="btn-contact">Contact</button>
+    <div class="nav-left">Saransh Thakran</div>
+    <div class="nav-center">
+      <button onclick="scrollToSection('home')" id="btn-home">Home</button>
+      <button onclick="scrollToSection('about')" id="btn-about">About</button>
+      <button onclick="scrollToSection('projects')" id="btn-projects">Projects</button>
+      <button onclick="scrollToSection('skills')" id="btn-skills">Skills</button>
+      <button onclick="scrollToSection('contact')" id="btn-contact">Contact</button>
+    </div>
+    <div class="toggle-wrapper" onclick="toggleMode()">
+      <span id="mode-label">Dark Mode</span>
+      <div class="toggle-container">
+        <div class="toggle-slider"></div>
       </div>
     </div>
   </nav>
@@ -91,10 +202,28 @@
   <section id="projects">
     <h2>Projects</h2>
     <ul>
-      <li>Real-time Chat App @ Pinnacle Labs</li>
+      <li>Real-time Chat App</li>
       <li>Weather Dashboard with Live API</li>
-      <li>Optical Fiber Simulation (OptiSystem)</li>
+      <li>Optical Fiber Simulation</li>
     </ul>
+  </section>
+
+  <section id="skills" class="skills-container">
+    <h2>Skills</h2>
+    <p>These are some of the technologies I work with:</p>
+    <div class="slider">
+      <div class="slider-track">
+        <img style="--i:0" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5">
+        <img style="--i:1" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3">
+        <img style="--i:2" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript">
+        <img style="--i:3" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React">
+        <img style="--i:4" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js">
+        <img style="--i:5" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub">
+        <img style="--i:6" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5">
+        <img style="--i:7" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3">
+        <img style="--i:8" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript">
+      </div>
+    </div>
   </section>
 
   <section id="contact">
@@ -103,11 +232,19 @@
   </section>
 
   <script>
-    const buttons = document.querySelectorAll('.nav-buttons button');
+    const buttons = document.querySelectorAll('.nav-center button');
     function scrollToSection(id) {
       document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
       buttons.forEach(btn => btn.classList.remove('active'));
       document.getElementById(`btn-${id}`).classList.add('active');
+    }
+
+    function toggleMode() {
+      document.body.classList.toggle('dark');
+      document.body.classList.toggle('dark-mode');
+      const modeLabel = document.getElementById('mode-label');
+      const isDark = document.body.classList.contains('dark');
+      modeLabel.textContent = isDark ? 'Light Mode' : 'Dark Mode';
     }
   </script>
 </body>
